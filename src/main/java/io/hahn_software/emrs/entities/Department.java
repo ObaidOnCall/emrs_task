@@ -15,7 +15,15 @@ import jakarta.persistence.Index;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(
     name = "departments" ,
