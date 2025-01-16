@@ -33,7 +33,7 @@ public class DbConf {
          *                              {classpath*:META-INF/persistence.xml} 🛑
          */
 
-        emf.setPackagesToScan("com.example.entities");
+        emf.setPackagesToScan("io.hahn_software.emrs.entities");
         
         emf.setJpaProperties(properties);
 
