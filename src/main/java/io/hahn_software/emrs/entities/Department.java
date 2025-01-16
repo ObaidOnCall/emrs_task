@@ -44,7 +44,6 @@ public class Department {
     private String name ;
 
 
-
     @CreationTimestamp
     private Instant createdAt ;
 
