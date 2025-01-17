@@ -1,6 +1,10 @@
 package io.hahn_software.emrs.entities;
 
+import java.time.Instant;
+
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.autoconfigure.batch.BatchProperties.Job;
 
 import io.hahn_software.emrs.enums.EmploymentStatus;
@@ -10,6 +14,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -66,5 +72,16 @@ public class Employee {
 
     @Column(nullable = false)
     private String email ;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    private Department department ;
+
+
+    @CreationTimestamp
+    private Instant createdAt ;
+
+    @UpdateTimestamp
+    private Instant updatedAt ;
 
 }

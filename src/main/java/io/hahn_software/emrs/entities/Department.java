@@ -1,6 +1,7 @@
 package io.hahn_software.emrs.entities;
 
 import java.time.Instant;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.DynamicUpdate;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -43,6 +45,9 @@ public class Department {
     @Column(unique = true)
     private String name ;
 
+
+    @OneToMany(mappedBy = "department")
+    private List<Employee> employees ;
 
     @CreationTimestamp
     private Instant createdAt ;
