@@ -1,6 +1,8 @@
 package io.hahn_software.emrs.integration;
 
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.Instant;
@@ -13,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +25,7 @@ import io.hahn_software.emrs.dtos.EmployeeRequest;
 import io.hahn_software.emrs.dtos.EmployeeResponse;
 import io.hahn_software.emrs.dtos.OperationResult;
 import io.hahn_software.emrs.dtos.PageDTO;
+import io.hahn_software.emrs.entities.Employee;
 import io.hahn_software.emrs.enums.EmploymentStatus;
 import io.hahn_software.emrs.services.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
@@ -79,6 +83,12 @@ class EmployeeControllerIntegrationTest extends BaseControllerTest {
     }
 
 
+    /***
+     * 
+     * 
+     * Create Tests
+     * @throws Exception
+     */
     @Test
     void testAdministratorCanCreateEmployees() throws Exception {
         EmployeeRequest request = createEmployeeRequest();
@@ -128,6 +138,12 @@ class EmployeeControllerIntegrationTest extends BaseControllerTest {
 
 
 
+    /***
+     * 
+     * Delete Tests
+     * @throws Exception
+     */
+
     @Test
     void testAdministratorCanDeleteEmployees() throws Exception {
         List<Long> employeeIds = List.of(1L, 2L, 3L);
@@ -146,6 +162,14 @@ class EmployeeControllerIntegrationTest extends BaseControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Operation completed successfully."));
     }
 
+
+
+
+    /***
+     * 
+     * find Tests
+     * @throws Exception
+     */
 
 
     @Test
@@ -197,6 +221,12 @@ class EmployeeControllerIntegrationTest extends BaseControllerTest {
 
 
 
+    /***
+     * 
+     * Pageination Tests
+     * @throws Exception
+     */
+
     @Test
     void testAdministratorCanGetEmployeesWithPagination() throws Exception {
         
@@ -225,5 +255,74 @@ class EmployeeControllerIntegrationTest extends BaseControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.content[0].fullName").value("John Doe"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.totalElements").value(1));
+    }
+
+
+    /***
+     * 
+     * Update Tests
+     * @throws Exception
+     */
+
+    @Test
+    void testUpdateEmployeesInBatch_Success() throws Exception {
+
+        List<Long> employeeIds = List.of(1L, 2L, 3L);
+        Employee employee = Employee.builder()
+                .email("new.email@example.com")
+                .jobTitle("Senior Developer")
+                .build();
+
+        OperationResult result = OperationResult.of(3); // Simulate 3 employees updated
+
+        when(employeeService.updateEmployeesInBatch(employeeIds, employee))
+                .thenReturn(result);
+
+        MockHttpServletRequestBuilder requestBuilder = prepareRequestWithOAuthToken(
+                HttpMethod.PUT, "/employees?employeeIds=1,2,3", "HR_Personnel"
+        )
+                .content(objectMapper.writeValueAsString(employee));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.affectedRecords").value(3))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value("Operation completed successfully."));
+
+        verify(employeeService, times(1)).updateEmployeesInBatch(employeeIds, employee);
+    }
+
+
+    @Test
+    void testUpdateEmployeesInBatch_InvalidInput_EmployeeIdsNull() throws Exception {
+
+        Employee employee = Employee.builder()
+                .email("new.email@example.com")
+                .jobTitle("Senior Developer")
+                .build();
+
+        MockHttpServletRequestBuilder requestBuilder = prepareRequestWithOAuthToken(
+                HttpMethod.PUT, "/employees", "HR_Personnel"
+        )
+                .content(objectMapper.writeValueAsString(employee));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+
+    @Test
+    void testUpdateEmployeesInBatch_Unauthorized() throws Exception {
+
+        Employee employee = Employee.builder()
+                .email("new.email@example.com")
+                .jobTitle("Senior Developer")
+                .build();
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put("/employees?employeeIds=1,2,3")
+                .content(objectMapper.writeValueAsString(employee));
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 }
