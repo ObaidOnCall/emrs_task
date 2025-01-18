@@ -15,8 +15,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.security.oauth2.jwt.JwtDecoder;
-// import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtDecoderInitializationException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -77,6 +78,15 @@ public class SecurityConf {
                 authorize.anyRequest().authenticated() ;
             }
         )
+        .oauth2ResourceServer( oauth2 ->
+            oauth2.jwt( jwt ->
+                {
+                    jwt.jwtAuthenticationConverter(new JwtConverter()) ;
+                    jwt.decoder(jwtDecoder()) ;
+
+                }
+            )
+        )
         .sessionManagement(sessionManagement -> 
             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
@@ -86,5 +96,35 @@ public class SecurityConf {
         return http.build() ;
 
 
+    }
+
+
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        try {
+
+            ClassPathResource publicKeyResource = new ClassPathResource("key.pub");
+
+
+
+            String publicKeyPEM;
+            try (InputStream inputStream = publicKeyResource.getInputStream()) {
+                publicKeyPEM = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            }
+
+            publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "")
+                                    .replace("-----END PUBLIC KEY-----", "")
+                                    .replaceAll("\\s+", "");
+            byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);
+            
+            // Create and return the JwtDecoder
+            return NimbusJwtDecoder.withPublicKey((RSAPublicKey) publicKey).build();
+        } catch (Exception e) {
+            throw new JwtDecoderInitializationException("Failed to create JWT decoder", e);
+        }
     }
 }
