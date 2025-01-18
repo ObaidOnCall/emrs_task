@@ -37,6 +37,9 @@ public class RolesGrantedAuthoritiesConverter implements Converter<Jwt, Collecti
 
 
         Map<String, Object> realmAccess = source.getClaim("realm_access");
+
+
+        log.info("Extracted realm_access: {} 🔖", realmAccess);
         
         if (Objects.isNull(realmAccess) || realmAccess.isEmpty()) {
             return Collections.emptyList();
@@ -47,6 +50,8 @@ public class RolesGrantedAuthoritiesConverter implements Converter<Jwt, Collecti
 
 
         Object roles = realmAccess.get("roles");
+
+        log.info("Extracted roles: {} 🔖", roles);
 
         if (Objects.isNull(roles) || !(roles instanceof Collection<?>)) {
             return Collections.emptyList();
@@ -60,6 +65,9 @@ public class RolesGrantedAuthoritiesConverter implements Converter<Jwt, Collecti
             .filter(String.class::isInstance) //! Ensure roles are strings
             .map(role -> new SimpleGrantedAuthority(authorityPrefix  + (String) role))
             .forEach(authorities::add);
+
+
+        log.info("Mapped authorities: {}", authorities);
 
         return authorities;
     }

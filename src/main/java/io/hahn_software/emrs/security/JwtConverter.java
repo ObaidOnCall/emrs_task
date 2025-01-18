@@ -3,6 +3,10 @@ package io.hahn_software.emrs.security;
 
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
 public class JwtConverter extends JwtAuthenticationConverter {
     
 
@@ -15,5 +19,8 @@ public class JwtConverter extends JwtAuthenticationConverter {
 
         setJwtGrantedAuthoritiesConverter(grantedAuthoritiesConverter);
         setPrincipalClaimName(PRINCIPAL_CLAIM_NAME);
+
+
+        log.debug("Roles Granted {} ✅" , grantedAuthoritiesConverter);
     }
 }
