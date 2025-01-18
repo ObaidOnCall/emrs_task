@@ -32,5 +32,12 @@ public enum EmploymentStatus {
      * iNTERSHIP
      */
 
-    INTERSHIP
+    INTERSHIP ,
+
+    /**
+     * 
+     * TEMPORARY
+     */
+
+     TEMPORARY
 }
