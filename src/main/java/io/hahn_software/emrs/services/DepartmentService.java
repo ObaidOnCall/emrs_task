@@ -7,6 +7,7 @@ import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.hahn_software.emrs.annotations.LogUserOperation;
 import io.hahn_software.emrs.dao.repositories.DepartmentRepo;
 import io.hahn_software.emrs.dtos.DepartmentRequest;
 import io.hahn_software.emrs.dtos.DepartmentResponse;
@@ -46,7 +47,7 @@ public class DepartmentService {
      */
 
 
-
+    @LogUserOperation
     public List<DepartmentResponse> createDepartments(List<DepartmentRequest> departmentRequests) {
         log.info("Creating departments in batch...");
 
@@ -64,7 +65,7 @@ public class DepartmentService {
      * @param departmentIds List of department IDs to delete.
      * @return Number of departments deleted.
      */
-
+    @LogUserOperation
     public OperationResult deleteDepartments(List<Long> departmentIds) {
         log.info("Deleting departments with IDs: {}", departmentIds);
 
@@ -86,6 +87,7 @@ public class DepartmentService {
      * @param departmentIds List of department IDs to find.
      * @return List of DepartmentResponse objects for the found departments.
      */
+    @LogUserOperation
     public List<DepartmentResponse> findDepartments(List<Long> departmentIds) {
         log.info("Finding departments with IDs: {}", departmentIds);
 

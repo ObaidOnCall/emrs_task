@@ -64,6 +64,7 @@ public class EmployeeService {
      * @param employeeIds List of employee IDs to delete.
      * @return Number of employees deleted.
      */
+    @LogUserOperation("Delete employees in batch")
     public OperationResult deleteEmployees(List<Long> employeeIds) {
         if (employeeIds == null || employeeIds.isEmpty()) {
             return OperationResult.of(0);
@@ -82,6 +83,7 @@ public class EmployeeService {
      * @param ids List of employee IDs.
      * @return List of EmployeeResponse DTOs.
      */
+    @LogUserOperation
     public List<EmployeeResponse> findEmployees(List<Long> ids) {
         if (ids == null || ids.isEmpty()) {
             return Collections.emptyList();
