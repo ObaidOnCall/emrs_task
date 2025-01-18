@@ -124,12 +124,29 @@ public class EmployeeService {
     }
 
 
+
+
     /**
-     * Get the total count of employees.
+     * Update employees in batch using the repository method.
      *
-     * @return Total number of employees.
+     * @param employeeIds List of employee IDs to update.
+     * @param employee    Employee object containing the fields to update.
+     * @return Total number of employees updated.
      */
-    public Long getEmployeeCount() {
-        return employeeRepo.count();
+    @LogUserOperation("Update employees in batch")
+    public OperationResult updateEmployeesInBatch(List<Long> employeeIds, Employee employee) {
+        
+        if (employeeIds == null || employeeIds.isEmpty()) {
+            throw new IllegalArgumentException("Employee IDs list cannot be null or empty");
+        }
+
+        if (employee == null) {
+            throw new IllegalArgumentException("Employee object cannot be null");
+        }
+
+        int count = employeeRepo.updateClientsInBatch(employeeIds, employee) ;
+
+        return OperationResult.of(count);
     }
+
 }

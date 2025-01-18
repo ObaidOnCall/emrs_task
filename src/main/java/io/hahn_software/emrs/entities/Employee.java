@@ -41,7 +41,7 @@ import lombok.NoArgsConstructor;
     }
 )
 @DynamicUpdate
-public class Employee {
+public class Employee implements AbstractBaseEntity{
 
 
     @Id

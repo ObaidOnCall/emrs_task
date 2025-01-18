@@ -8,8 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import io.hahn_software.emrs.dao.interfaces.EmployeeDaoInterface;
 import io.hahn_software.emrs.entities.Employee;
+import io.hahn_software.emrs.utils.DBUtiles;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -98,6 +100,33 @@ public class EmployeeRepo implements EmployeeDaoInterface{
         TypedQuery<Long> query = em.createQuery(jpql, Long.class);
 
         return query.getSingleResult();
+    }
+
+    @Override
+    public int updateClientsInBatch(List<Long> employeesIds, Employee employee) {
+        
+        int totalUpdatedRecords = 0 ;
+
+        Query query = DBUtiles.buildJPQLQueryDynamicallyForUpdate(employee, em) ;
+
+
+        for (int i = 0; i < employeesIds.size(); i += batchSize) {
+            List<Long> batch = employeesIds.subList(i, Math.min(i + batchSize, employeesIds.size()));
+    
+            
+            query.setParameter("Ids", batch);
+
+            // Execute the update
+            int updatedRecords = query.executeUpdate();
+            totalUpdatedRecords += updatedRecords;
+    
+            em.flush();
+            em.clear();
+
+        }
+
+        return totalUpdatedRecords ;
+
     }
     
 }

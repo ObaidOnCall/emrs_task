@@ -15,5 +15,7 @@ public interface EmployeeDaoInterface {
 
     List<Employee> employeesWithPagination(int page, int pageSize) ;
 
+    int updateClientsInBatch(List<Long> employeesIds, Employee Employee) ;
+
     Long count() ;
 }
