@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest
 @Slf4j
-// @Import(SecurityConf.class)
 public abstract class BaseControllerTest {
 
 
@@ -46,7 +45,7 @@ public abstract class BaseControllerTest {
 
         // Define the roles list
         List<String> roles = List.of(
-            role, // The role you want to test (e.g., "Administrator")
+            role,
             "offline_access",
             "default-roles-hahn_software",
             "uma_authorization"
