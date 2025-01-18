@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +20,12 @@ import io.hahn_software.emrs.dtos.EmployeeRequest;
 import io.hahn_software.emrs.dtos.EmployeeResponse;
 import io.hahn_software.emrs.dtos.OperationResult;
 import io.hahn_software.emrs.dtos.PageDTO;
+import io.hahn_software.emrs.dtos.interfaces.CreateValidationGroup;
 import io.hahn_software.emrs.services.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -47,6 +48,7 @@ public class EmployeeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ROLE_HR_Personnel') or hasRole('ROLE_Administrator')")
+    @Validated(CreateValidationGroup.class)
     @Operation(
         summary = "Create employees in batch",
         description = "Creates multiple employees in a single batch operation."

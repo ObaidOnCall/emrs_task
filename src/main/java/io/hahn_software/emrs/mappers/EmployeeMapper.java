@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import io.hahn_software.emrs.dtos.DepartmentResponse;
 import io.hahn_software.emrs.dtos.EmployeeRequest;
 import io.hahn_software.emrs.dtos.EmployeeResponse;
+import io.hahn_software.emrs.entities.Department;
 import io.hahn_software.emrs.entities.Employee;
 
 @Component
@@ -37,6 +38,12 @@ public class EmployeeMapper {
                 .address(employeeRequest.getAddress())
                 .phone(employeeRequest.getPhone())
                 .email(employeeRequest.getEmail())
+                .department(
+                    Department.builder()
+                                .id(employeeRequest.getDepartmentId())
+                                .build()
+
+                )
                 .build();
     }
 

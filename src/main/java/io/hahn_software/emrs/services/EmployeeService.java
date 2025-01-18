@@ -6,22 +6,22 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import io.hahn_software.emrs.annotations.LogUserOperation;
 import io.hahn_software.emrs.dao.repositories.DepartmentRepo;
 import io.hahn_software.emrs.dao.repositories.EmployeeRepo;
 import io.hahn_software.emrs.dtos.EmployeeRequest;
 import io.hahn_software.emrs.dtos.EmployeeResponse;
 import io.hahn_software.emrs.dtos.OperationResult;
 import io.hahn_software.emrs.dtos.PageDTO;
-import io.hahn_software.emrs.entities.Department;
 import io.hahn_software.emrs.entities.Employee;
 import io.hahn_software.emrs.mappers.EmployeeMapper;
-import lombok.AllArgsConstructor;
+import jakarta.transaction.Transactional;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 
 @Service
 @Data
+@Transactional
 public class EmployeeService {
 
 
@@ -44,7 +44,7 @@ public class EmployeeService {
     
 
 
-
+    @LogUserOperation("Create employees in batch")
     public List<EmployeeResponse> createEmployeesInBatch(List<EmployeeRequest> employeeRequests) {
 
         // Map EmployeeRequest list to Employee list
