@@ -48,6 +48,10 @@ Replace <your_refresh_token> with the actual refresh_token you received during l
 
 For the APIs, all operations are designed to work in **batch mode**, meaning you can perform actions on multiple records at once. This applies to both employee and department endpoints.
 
+
+### ⚠️ Notice:
+To use the APIs, you **must include the `access_token`** in your requests for authorization. The `access_token` is obtained after logging in (see the [Login Functionality](#-login-functionality) section for details).
+
 ### Key Features:
 - **Batch Operations**:
   - **Add Multiple Employees**: You can add multiple employees in a single request.
