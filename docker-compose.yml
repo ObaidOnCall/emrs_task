@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:16.2
+    # volumes:
+    #   - postgres_hahn_task_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - hahn_task_network
+    restart: unless-stopped
+
+  hahn_task:
+    # build: .
+    image: lasthour/hahn_tasks:1.4
+    environment:
+      DB_HOST: postgres:5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_SCHEMA: ${DB_SCHEMA}
+
+    ports:
+      - '${HOST_PORT:-8080}:8080'
+
+    restart: unless-stopped
+    depends_on:
+      - postgres
+    networks:
+      - hahn_task_network
+
+volumes:
+  postgres_hahn_task_data:
+    driver: local
+
+networks:
+  hahn_task_network: {}
