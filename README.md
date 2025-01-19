@@ -94,8 +94,8 @@ To set up the application using Docker, follow these steps:
 First, clone the repository to your local machine:
 
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+git clone https://github.com/ObaidOnCall/emrs_task.git
+cd emrs_task
 ```
 
 
