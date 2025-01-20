@@ -113,7 +113,7 @@ The application uses environment variables defined in the .env file. You can mod
 `DB_SCHEMA=public`
 `HOST_PORT=8080`
 
-### 3. Docker Compose File
+### 3. Docker Compose File( ⚠️ Notice if you want to copie this docker compose config dirclty without cloning the enitre repo  , do not forget to copie the .env file  with it )
 
 ```yaml
 services:
